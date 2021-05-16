@@ -1,4 +1,5 @@
 from tkinter import *
+from tkinter import filedialog
 from tkinter import ttk
 from PIL import ImageTk, Image
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
@@ -7,6 +8,8 @@ import financial_agent
 import data_agent
 import LSTM_predictor
 from tkinter import messagebox
+
+import trade_manager
 
 root = Tk()
 root.title("Portfolio App")
@@ -50,7 +53,7 @@ option_menu.add_command(label="Find Next",command=our_command)
 
 # Grynoji verte (samata) frame
 def get_funds():
-    return (financial_agent.get_buying_power() + " €")
+    return (financial_agent.get_buying_power() + " $")
 samata_frame = LabelFrame(root, text="Grynoji vertė", font=("-weight bold", 20), pady=20)
 suma_label = Label(samata_frame, text=get_funds(), font=("-weight bold", 15)).grid(row=0, column=0)
 # laisvi_label = Label(samata_frame, text="874,371.54 €", font=("-weight bold", 15)).grid(row=0, column=0)
@@ -174,9 +177,27 @@ def open_new_rule_dialog():
     chooseStrategyButton = Button(rule_dialog, text="Įtraukti taisyklę", command=lambda: select_rule(company_name.get(), clicked.get()))
     chooseStrategyButton.grid(row=2, column=0, columnspan=2, padx=10, pady=10)
 
+def ask_directory():
+    return filedialog.askdirectory()
+
+    # print(folder_selected)
+
+def test_model():
+    path = ask_directory()
+    model = data_agent.load_saved_agent(path)
+    company = get_selected_company()
+    LSTM_predictor.test_model(model, company)
+    prediction_for_tomorrow = LSTM_predictor.predictOneDay(model, company)
+    print(prediction_for_tomorrow)
+    real_value_for_today = LSTM_predictor.getRealValue(company)
+    print(real_value_for_today)
+    trade_manager.execute_LSTM_strategy(company, float(real_value_for_today), float(prediction_for_tomorrow))
+
 selecttreeitembutton = Button(root, text="Parodyti uždarymo kainų grafiką", command=selectItem)
 selecttreeitembutton.grid(row=2, column=0, padx=10, pady=10)
 createRuleButton = Button(root, text="Sukurti naują taisyklę", command=open_new_rule_dialog)
 createRuleButton.grid(row=3, column=0, padx=10, pady=(0, 10))
+selectModelButton = Button(root, text="Pritaikyti LSTM modelį", command=test_model)
+selectModelButton.grid(row=4, column=0, padx=10, pady=(0, 10))
 
 root.mainloop()

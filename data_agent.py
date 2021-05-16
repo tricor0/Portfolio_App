@@ -1,4 +1,5 @@
 import pandas_datareader as web
+from tensorflow import keras
 import matplotlib.pyplot as plt
 plt.style.use('fivethirtyeight')
 
@@ -18,3 +19,6 @@ def close_price_history(company):
 
 def get_df():
     return df
+
+def load_saved_agent(path):
+    return keras.models.load_model(path)

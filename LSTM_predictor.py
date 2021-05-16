@@ -6,6 +6,7 @@ import math
 #pip3.8 install pandas_datareader
 # import pandas_datareader as web
 import numpy as np
+import pandas_datareader as web
 from matplotlib import pyplot as plt
 
 import data_agent
@@ -22,8 +23,35 @@ from keras.layers import Dense, LSTM
 # root.title("Address Book Program")
 # root.iconbitmap('C:\PythonPrograms\Tkinter Course\money.ico')
 # root.geometry("400x400")
-def calculate_LSTM(company):
-#Get the stock quote
+
+def set_scaled_data(data):
+    global scaled_data
+    scaled_data = data
+
+def set_training_data_len(data):
+    global training_data_len
+    training_data_len = data
+
+def set_work_data(data):
+    global work_data
+    work_data = data
+
+def set_scaler(data):
+    global scaler
+    scaler = data
+
+def set_train_data(data):
+    global train_data
+    train_data = data
+
+def set_dataset(data):
+    global dataset
+    dataset = data
+
+
+
+def prepare_calculations(company):
+    #Get the stock quote
     data_agent.get_stock_data(company)
     # df = web.DataReader('LGD1L.VS', data_source='yahoo', start='2012-01-01', end='2021-05-15')
     #Show the data
@@ -47,23 +75,35 @@ def calculate_LSTM(company):
 
 
     #Create a new dataframe with only the close column
-    data = data_agent.get_df().filter(['Close'])
-    #Convert the dataframe to a numpy array
-    dataset = data.values
-    #Get the number of rows to train the model on
-    training_data_len = math.ceil(len(dataset)* .8 )
 
+    work_data = data_agent.get_df().filter(['Close'])
+    set_work_data(work_data)
+    #Convert the dataframe to a numpy array
+
+    dataset = work_data.values
+    set_dataset(dataset)
+    #Get the number of rows to train the model on
+
+    training_data_len = math.ceil(len(dataset)* .8 )
+    set_training_data_len(training_data_len)
     #training_data_len
 
     #Scale the data
+
     scaler = MinMaxScaler(feature_range = (0,1))
+    set_scaler(scaler)
     scaled_data = scaler.fit_transform(dataset)
+    set_scaled_data(scaled_data)
 
     #scaled_data
 
     #Create the training data set
     #Create the scaled trainig data set
     train_data = scaled_data[0:training_data_len , :]
+    set_train_data(train_data)
+
+def calculate_LSTM(company):
+    prepare_calculations(company)
     #Split the data into x_train and y_train data sets
     x_train = []
     y_train = []
@@ -98,12 +138,15 @@ def calculate_LSTM(company):
 
 
     #Train the model
-    model.fit(x_train, y_train, batch_size=1, epochs=5)
+    model.fit(x_train, y_train, batch_size=10, epochs=5)
     # trainModel()
     # train_button = Button(root, text="Train Model", command=trainModel)
     # train_button.pack()
+    model.save('C:\PythonPrograms\Bakalauro Baigiamasis Darbas\LSTM stock price prediction\models')
+    return
 
-
+def test_model(model, company):
+    prepare_calculations(company)
     #Create the testing data set
     #Create a new array containing scaled values from integers 1543 to 2003
     test_data = scaled_data[training_data_len - 60: , :]
@@ -132,13 +175,13 @@ def calculate_LSTM(company):
 
     #Plot the data
     #train = data[:training_data_len]
-    valid = data[training_data_len:]
+    valid = work_data[training_data_len:]
     valid['Predictions'] = predictions
     #Visualize the data
     plt.figure(figsize=(16,8))
-    plt.title('Model')
-    plt.xlabel('Date', fontsize=18)
-    plt.ylabel('Close Price USD ($)', fontsize=18)
+    plt.title('Modelis')
+    plt.xlabel('Data', fontsize=18)
+    plt.ylabel('Uždarymo kainų istorija ($)', fontsize=18)
     #plt.plot(train['Close'])
     plt.plot(valid[['Close', 'Predictions']])
     #plt.legend(['Train', 'Val', 'Predictions'], loc='lower right')
@@ -151,12 +194,12 @@ def calculate_LSTM(company):
 #Show the valid and predicted prices
 #valid
 
-# TODO pritaikyti situos metodus. kazkur issaugoti modeli, kad nereiketu jo kurti kiekviena karta.
-def predictOneDay():
+def predictOneDay(model, company):
     #Get the quote
-    apple_quote = web.DataReader('GOOGL', data_source='yahoo', start='2012-01-01', end='2021-04-15') ## end='2019-12-17'
+    # prediction_data = data_agent.get_stock_data(company)
+    prediction_data = web.DataReader(company, data_source='yahoo', start='2012-01-01', end='2021-05-14') ## end='2019-12-17'
     #Create a new dataframe
-    new_df = apple_quote.filter(['Close'])
+    new_df = prediction_data.filter(['Close'])
     #Get the last 60 day closin price values and convert the dataframe to an array
     last_60_days = new_df[-60:].values
     #Scale the data
@@ -174,26 +217,29 @@ def predictOneDay():
     #Undo the scalling
     pred_price = scaler.inverse_transform(pred_price)
     #print("Predicted Price for 2021-04-16: " + str(pred_price[0][0]))
-    predictionForTomorrow = "Predicted Price for 2021-04-16: " + str(pred_price[0][0])
+    predictionForTomorrow = str(pred_price[0][0])
+    return predictionForTomorrow
     
-    predictOneDay_label = Label(root, text=predictionForTomorrow)
-    predictOneDay_label.pack()
+    # predictOneDay_label = Label(root, text=predictionForTomorrow)
+    # predictOneDay_label.pack()
 
 
 # predictoneday_button = Button(root, text="Predict One Day", command=predictOneDay)
 # predictoneday_button.pack()
 
-def getRealValue():
+def getRealValue(company):
     #Get the quote
-    apple_quote2 = web.DataReader('GOOGL', data_source='yahoo', start='2021-04-16', end='2021-04-16') ##atart and end='2019-12-18'
+    real_data = web.DataReader(company, data_source='yahoo', start='2021-05-15', end='2021-05-15') ##atart and end='2019-12-18'
     #print("Real Price for 2021-04-16: " + str(apple_quote2['Close'][1]))
-    realValueForTomorrow = "Real Price for 2021-04-16: " + str(apple_quote2['Close'][1])
+    real_value_for_today = str(real_data['Close'][0])
+    return real_value_for_today
     
-    realValueForOneDay_label = Label(root, text=realValueForTomorrow)
-    realValueForOneDay_label.pack()
+    # realValueForOneDay_label = Label(root, text=realValueForTomorrow)
+    # realValueForOneDay_label.pack()
 
 # getRealValue_button = Button(root, text="Get Real Value for One Day", command=getRealValue)
 # getRealValue_button.pack()
+
 
 #Run main window
 # root.mainloop()

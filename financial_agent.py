@@ -1,8 +1,9 @@
 import requests
 import json
 
-API_KEY = "PK9PY0D4HKTZK8HFA61G"
-SECRET_KEY = "xA27qPo7GEHFIJxhGWamstheu2R87AbOs4lL52N6"
+
+API_KEY = "PK6LCE46YT6P1T39GRXB"
+SECRET_KEY = "odhWhU3BXCsistPIueFsRl7vgkRvNRlKxez7QjwV"
 
 BASE_URL = "https://paper-api.alpaca.markets"
 ACCOUNT_URL = "{}/v2/account".format(BASE_URL)
