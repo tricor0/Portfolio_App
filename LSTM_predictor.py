@@ -143,8 +143,8 @@ def calculate_LSTM(company):
     # trainModel()
     # train_button = Button(root, text="Train Model", command=trainModel)
     # train_button.pack()
-    model_name = company + " LSTM batch " + str(batch)
-    model.save('C:\PythonPrograms\Bakalauro Baigiamasis Darbas\LSTM stock price prediction\models\\' + model_name)
+    model_name = "batch " + str(batch) + " " + company
+    model.save('C:\PythonPrograms\Bakalauro Baigiamasis Darbas\LSTM stock price prediction\models\\' + 'model ' + model_name)
     print("Modelis: " + model_name + " apmokytas sėkmingai")
     return
 
