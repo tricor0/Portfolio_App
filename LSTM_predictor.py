@@ -138,7 +138,7 @@ def calculate_LSTM(company):
 
 
     #Train the model
-    model.fit(x_train, y_train, batch_size=10, epochs=5)
+    model.fit(x_train, y_train, batch_size=1000, epochs=5)
     # trainModel()
     # train_button = Button(root, text="Train Model", command=trainModel)
     # train_button.pack()
@@ -229,7 +229,7 @@ def predictOneDay(model, company):
 
 def getRealValue(company):
     #Get the quote
-    real_data = web.DataReader(company, data_source='yahoo', start='2021-05-15', end='2021-05-15') ##atart and end='2019-12-18'
+    real_data = web.DataReader(company, data_source='yahoo', start='2021-05-14', end='2021-05-14') ##atart and end='2019-12-18'
     #print("Real Price for 2021-04-16: " + str(apple_quote2['Close'][1]))
     real_value_for_today = str(real_data['Close'][0])
     return real_value_for_today
