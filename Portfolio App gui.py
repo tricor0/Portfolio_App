@@ -3,7 +3,6 @@ from tkinter import filedialog
 from tkinter import ttk
 from PIL import ImageTk, Image
 import _thread
-from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 import financial_agent
 import data_agent
@@ -23,7 +22,6 @@ root.config(menu=my_menu)
 def our_command():
     print("Hello Portfolio App!")
 
-# Galima perdaryti i notebook view
 profile_menu= Menu(my_menu)
 my_menu.add_cascade(label="Apžvalga", menu=profile_menu, font="-weight bold")
 profile_menu.add_command(label="New...", command=our_command)
@@ -57,9 +55,7 @@ def get_funds():
     return (financial_agent.get_buying_power() + " $")
 samata_frame = LabelFrame(root, text="Grynoji vertė", font=("-weight bold", 20), pady=20)
 suma_label = Label(samata_frame, text=get_funds(), font=("-weight bold", 15)).grid(row=0, column=0)
-# laisvi_label = Label(samata_frame, text="874,371.54 €", font=("-weight bold", 15)).grid(row=0, column=0)
 
-# first_entry = Entry(samata_frame).pack()
 samata_frame.grid(row=0, column=0, padx=10, pady=10)
 
 companies_frame = LabelFrame(root, pady=20)
@@ -109,9 +105,6 @@ def setCompanyName(newName):
     company_name_label = Label(root, text=newName, font=("-weight bold", 20))
     company_name_label.grid(row=0, column=1)
 setCompanyName("                         ")
-
-from matplotlib.backends.backend_tkagg import (
-    FigureCanvasTkAgg, NavigationToolbar2Tk)
 
 def display_close_price_graph(company):
     if company == "": return
@@ -178,7 +171,6 @@ def open_new_rule_dialog():
 def ask_directory():
     return filedialog.askdirectory()
 
-    # print(folder_selected)
 
 def test_and_predict(model, company):
     LSTM_predictor.test_model(model, company)

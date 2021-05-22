@@ -37,8 +37,5 @@ def get_orders():
 
     return json.loads(r.content)
 
-# response = create_order('AAPL', 100, "buy", "market", "gtc")
-# response = create_order('MSFT', 1000, "buy", "market", "gtc")
-# orders = get_orders()
 account = get_account()
 print(account)

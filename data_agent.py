@@ -16,7 +16,7 @@ def get_stock_data(company):
 
 def close_price_history(company):
     #Visualize the closing price history
-    plt.figure(figsize=(8,4))
+    plt.figure(figsize=(11,4))
     plt.title('Uždarymo kainų istorija ' + company)
     plt.plot(df['Close'])
     plt.xlabel('Data', fontsize=18)
