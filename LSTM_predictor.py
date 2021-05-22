@@ -138,11 +138,14 @@ def calculate_LSTM(company):
 
 
     #Train the model
-    model.fit(x_train, y_train, batch_size=1000, epochs=5)
+    batch = 1000
+    model.fit(x_train, y_train, batch_size=batch, epochs=5)
     # trainModel()
     # train_button = Button(root, text="Train Model", command=trainModel)
     # train_button.pack()
-    model.save('C:\PythonPrograms\Bakalauro Baigiamasis Darbas\LSTM stock price prediction\models')
+    model_name = company + " LSTM batch " + str(batch)
+    model.save('C:\PythonPrograms\Bakalauro Baigiamasis Darbas\LSTM stock price prediction\models\\' + model_name)
+    print("Modelis: " + model_name + " apmokytas sėkmingai")
     return
 
 def test_model(model, company):

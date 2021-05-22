@@ -2,6 +2,7 @@ from tkinter import *
 from tkinter import filedialog
 from tkinter import ttk
 from PIL import ImageTk, Image
+import _thread
 from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
 
 import financial_agent
@@ -127,17 +128,14 @@ def selectItem():
     # print(tree.item(selection))
     setCompanyName("              ")
     setCompanyName(company)
-    display_close_price_graph(company)
+    _thread.start_new_thread(display_close_price_graph, (company, ))
 
 def select_rule(company, strategy):
     messagebox.showinfo("Informacija", "Pasirinkote " +strategy+ " investavimo strategiją " +company+ " įmonei.")
+    rule_dialog.destroy()
     if strategy=="LSTM Rekurentinis Neuroninis Tinklas":
-        LSTM_predictor.calculate_LSTM(company)
-    # TODO 1.padaryti kad sistama paskaiciuotu lstm
-    #     2.kad parodytu skaiciavimu patikimuma
-    #       3.Parasyti funkcija, kuri paimtu modelio sugeneruota kitos dienos kaina. jeigu ji dedesne tai pirkti akcija siandien ir parduoti rytoj. jeigu akcijos turimos, bet rytoj prognozuojama dar didesne kaina tai laikyti.
-    # myLabel = Label(root, text=company_name.get()).grid(row=1, column=1)
-    # company_name.get() clicked.get()
+        _thread.start_new_thread(LSTM_predictor.calculate_LSTM, (company, ))
+
 
 def open_new_rule_dialog():
     # Toplevel object which will
@@ -182,16 +180,19 @@ def ask_directory():
 
     # print(folder_selected)
 
-def test_model():
-    path = ask_directory()
-    model = data_agent.load_saved_agent(path)
-    company = get_selected_company()
+def test_and_predict(model, company):
     LSTM_predictor.test_model(model, company)
     prediction_for_tomorrow = LSTM_predictor.predictOneDay(model, company)
     print(prediction_for_tomorrow)
     real_value_for_today = LSTM_predictor.getRealValue(company)
     print(real_value_for_today)
     trade_manager.execute_LSTM_strategy(company, float(real_value_for_today), float(prediction_for_tomorrow))
+
+def test_model():
+    path = ask_directory()
+    model = data_agent.load_saved_agent(path)
+    company = get_selected_company()
+    _thread.start_new_thread(test_and_predict, (model, company, ))
 
 selecttreeitembutton = Button(root, text="Parodyti uždarymo kainų grafiką", command=selectItem)
 selecttreeitembutton.grid(row=2, column=0, padx=10, pady=10)
