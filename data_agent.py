@@ -1,11 +1,17 @@
 import pandas_datareader as web
 from tensorflow import keras
+from datetime import datetime
 import matplotlib.pyplot as plt
 plt.style.use('fivethirtyeight')
 
+global start_date
+start_date = '2012-01-01'
+global end_date
+end_date = datetime.today().strftime('%Y-%m-%d')
+
 def get_stock_data(company):
     global df
-    df = web.DataReader(company, data_source='yahoo', start='2012-01-01', end='2021-05-15')
+    df = web.DataReader(company, data_source='yahoo', start=start_date, end=end_date)
     df.shape
 
 def close_price_history(company):
