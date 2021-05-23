@@ -3,7 +3,7 @@ from tkinter import filedialog
 from tkinter import ttk
 from PIL import ImageTk, Image
 import _thread
-
+from tkcalendar import DateEntry
 import financial_agent
 import data_agent
 import LSTM_predictor
@@ -124,7 +124,9 @@ def selectItem():
     setCompanyName(company)
     _thread.start_new_thread(display_close_price_graph, (company, ))
 
-def select_rule(company, strategy):
+def select_rule(company, strategy, start_date, end_date):
+    print("start date: " + start_date)
+    print("end date: " + end_date)
     messagebox.showinfo("Informacija", "Pasirinkote " +strategy+ " investavimo strategiją " +company+ " įmonei.")
     rule_dialog.destroy()
     if strategy=="LSTM Rekurentinis Neuroninis Tinklas":
@@ -168,8 +170,17 @@ def open_new_rule_dialog():
     drop = OptionMenu(rule_dialog, clicked, *options)
     drop.grid(sticky="w", row=1, column=1, padx=(0, 10), pady=10)
 
-    chooseStrategyButton = Button(rule_dialog, text="Įtraukti taisyklę", command=lambda: select_rule(company_name.get(), clicked.get()))
-    chooseStrategyButton.grid(row=2, column=0, columnspan=2, padx=10, pady=10)
+    Label(rule_dialog, text="Data nuo: ").grid(sticky="w", row=2, column=0, padx=10, pady=10)
+    start_date = DateEntry(rule_dialog, width=12, background='darkblue',
+                    foreground='white', borderwidth=2, date_pattern='yyyy-mm-dd')
+    start_date.grid(sticky="w", row=2, column=1, padx=(0, 10), pady=10)
+    Label(rule_dialog, text="Data iki: ").grid(sticky="w", row=3, column=0, padx=10, pady=10)
+    end_date = DateEntry(rule_dialog, width=12, background='darkblue',
+                    foreground='white', borderwidth=2, date_pattern='yyyy-mm-dd')
+    end_date.grid(sticky="w", row=3, column=1, padx=(0, 10), pady=10)
+
+    chooseStrategyButton = Button(rule_dialog, text="Įtraukti taisyklę", command=lambda: select_rule(company_name.get(), clicked.get(),start_date.get(),end_date.get()))
+    chooseStrategyButton.grid(row=4, column=0, columnspan=2, padx=10, pady=10)
 
 def ask_directory():
     return filedialog.askdirectory()
