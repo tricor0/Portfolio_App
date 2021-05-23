@@ -1,17 +1,18 @@
 import financial_agent
+import data_agent
 from datetime import datetime
 import math
 
 
 # today = str(datetime.today().strftime('%Y-%m-%d'))
-today = '2020-04-29'
+# today = '2020-04-29'
 def execute_LSTM_strategy(company, today_price, one_day_prediction):
     response = ""
     if (today_price < one_day_prediction):
-        print("I buy for " + today_price)
+        print("I buy for " + str(today_price))
         response = financial_agent.create_order(company, 10, "buy", "market", "gtc")
     if (today_price > one_day_prediction):
-        print("I sell for " + today_price)
+        print("I sell for " + str(today_price))
         response = financial_agent.create_order(company, 10, "sell", "market", "gtc")
     print(response)
 
@@ -32,9 +33,9 @@ def execute_fibonacci_retracement(company, dataframe):
     # #     print("Is today buy signal nan: " + (reduced_df.loc[math.isnan(float(reduced_df['Buy_Signal_Price']))]))
 
     # buy_signal = reduced_df.loc[float(reduced_df['Buy_Signal_Price'])]
-    buy_signal = dataframe.at[today,'Buy_Signal_Price']
+    buy_signal = dataframe.at[data_agent.get_end_date(),'Buy_Signal_Price']
     # sell_signal = reduced_df.loc[float(reduced_df['Sell_Signal_Price'])]
-    sell_signal = dataframe.at[today,'Sell_Signal_Price']
+    sell_signal = dataframe.at[data_agent.get_end_date(),'Sell_Signal_Price']
     if not math.isnan(buy_signal):
         print("I buy for " + str(buy_signal))
         response = financial_agent.create_order(company, 10, "buy", "market", "gtc")

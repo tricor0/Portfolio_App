@@ -9,6 +9,7 @@ import data_agent
 import LSTM_predictor
 import Fibonacci_retracement
 from tkinter import messagebox
+from datetime import datetime
 
 import trade_manager
 
@@ -99,7 +100,8 @@ first_label1 = Label(profile_frame, text="Administratorius")
 first_label1.grid(row=0, column=1, padx=(0, 10))
 profile_frame.grid(sticky="e", row=0, column=2, padx=10, pady=10)
 
-
+# global start_date
+# global end_date
 # Company name big label
 
 def setCompanyName(newName):
@@ -125,8 +127,10 @@ def selectItem():
     _thread.start_new_thread(display_close_price_graph, (company, ))
 
 def select_rule(company, strategy, start_date, end_date):
-    print("start date: " + start_date)
-    print("end date: " + end_date)
+    # print("start date: " + start_date)
+    # print("end date: " + end_date)
+    data_agent.set_start_date(start_date)
+    data_agent.set_end_date(end_date)
     messagebox.showinfo("Informacija", "Pasirinkote " +strategy+ " investavimo strategiją " +company+ " įmonei.")
     rule_dialog.destroy()
     if strategy=="LSTM Rekurentinis Neuroninis Tinklas":
@@ -175,13 +179,15 @@ def open_new_rule_dialog():
                     foreground='white', borderwidth=2, date_pattern='yyyy-mm-dd')
     start_date.grid(sticky="w", row=2, column=1, padx=(0, 10), pady=10)
     start_date.delete(0,END)
-    start_date.insert(0,'2020-05-23')
+    start_date.insert(0,'2012-01-01')
     Label(rule_dialog, text="Data iki: ").grid(sticky="w", row=3, column=0, padx=10, pady=10)
     end_date = DateEntry(rule_dialog, width=12, background='darkblue',
                     foreground='white', borderwidth=2, date_pattern='yyyy-mm-dd')
     end_date.grid(sticky="w", row=3, column=1, padx=(0, 10), pady=10)
+    end_date.delete(0,END)
+    end_date.insert(0,'2021-05-21')
 
-    chooseStrategyButton = Button(rule_dialog, text="Įtraukti taisyklę", command=lambda: select_rule(company_name.get(), clicked.get(),start_date.get(),end_date.get()))
+    chooseStrategyButton = Button(rule_dialog, text="Įtraukti taisyklę", command=lambda: select_rule(company_name.get(), clicked.get(), start_date.get(), end_date.get()))
     chooseStrategyButton.grid(row=4, column=0, columnspan=2, padx=10, pady=10)
 
 def ask_directory():

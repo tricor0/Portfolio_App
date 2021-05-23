@@ -137,7 +137,7 @@ def test_model(model, company):
 
 def predictOneDay(model, company):
     #Get the quote
-    prediction_data = web.DataReader(company, data_source='yahoo', start=data_agent.start_date, end=data_agent.end_date)
+    prediction_data = web.DataReader(company, data_source='yahoo', start=data_agent.get_start_date(), end=data_agent.get_end_date())
     #Create a new dataframe
     new_df = prediction_data.filter(['Close'])
     #Get the last 60 day closin price values and convert the dataframe to an array
@@ -161,7 +161,7 @@ def predictOneDay(model, company):
 
 def getRealValue(company):
     #Get the quote
-    real_data = web.DataReader(company, data_source='yahoo', start=data_agent.end_date, end=data_agent.end_date)
+    real_data = web.DataReader(company, data_source='yahoo', start=data_agent.get_end_date(), end=data_agent.get_end_date())
     real_value_for_today = str(real_data['Close'][0])
     return real_value_for_today
 
