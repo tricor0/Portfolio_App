@@ -34,7 +34,7 @@ def set_dataset(data):
 
 def prepare_calculations(company):
     #Get the stock quote
-    data_agent.get_stock_data(company)
+    data_agent.get_stock_data_LSTM(company)
 
     work_data = data_agent.get_df().filter(['Close'])
     set_work_data(work_data)

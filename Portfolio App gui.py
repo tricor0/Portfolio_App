@@ -7,6 +7,7 @@ import _thread
 import financial_agent
 import data_agent
 import LSTM_predictor
+import Fibonacci_retracement
 from tkinter import messagebox
 
 import trade_manager
@@ -109,7 +110,7 @@ setCompanyName("                         ")
 def display_close_price_graph(company):
     if company == "": return
     else:
-        data_agent.get_stock_data(company)
+        data_agent.get_stock_data_LSTM(company)
         data_agent.close_price_history(company)
 
 def get_selected_company():
@@ -128,6 +129,8 @@ def select_rule(company, strategy):
     rule_dialog.destroy()
     if strategy=="LSTM Rekurentinis Neuroninis Tinklas":
         _thread.start_new_thread(LSTM_predictor.calculate_LSTM, (company, ))
+    if strategy=="Fibonacci Retracement Lygiai":
+        _thread.start_new_thread(Fibonacci_retracement.calculate_and_get_dataframe, (company, ))
 
 
 def open_new_rule_dialog():
