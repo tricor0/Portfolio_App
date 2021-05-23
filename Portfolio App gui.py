@@ -174,6 +174,8 @@ def open_new_rule_dialog():
     start_date = DateEntry(rule_dialog, width=12, background='darkblue',
                     foreground='white', borderwidth=2, date_pattern='yyyy-mm-dd')
     start_date.grid(sticky="w", row=2, column=1, padx=(0, 10), pady=10)
+    start_date.delete(0,END)
+    start_date.insert(0,'2020-05-23')
     Label(rule_dialog, text="Data iki: ").grid(sticky="w", row=3, column=0, padx=10, pady=10)
     end_date = DateEntry(rule_dialog, width=12, background='darkblue',
                     foreground='white', borderwidth=2, date_pattern='yyyy-mm-dd')
