@@ -2,14 +2,12 @@ from tkinter import *
 from tkinter import filedialog
 from tkinter import ttk
 from PIL import ImageTk, Image
-import _thread
 from tkcalendar import DateEntry
 import financial_agent
 import data_agent
 import LSTM_predictor
 import Fibonacci_retracement
 from tkinter import messagebox
-from datetime import datetime
 
 import trade_manager
 
@@ -124,7 +122,8 @@ def selectItem():
     # print(tree.item(selection))
     setCompanyName("              ")
     setCompanyName(company)
-    _thread.start_new_thread(display_close_price_graph, (company, ))
+    # _thread.start_new_thread(display_close_price_graph, (company, ))
+    display_close_price_graph(company)
 
 def select_rule(company, strategy, start_date, end_date):
     # print("start date: " + start_date)
@@ -134,9 +133,11 @@ def select_rule(company, strategy, start_date, end_date):
     messagebox.showinfo("Informacija", "Pasirinkote " +strategy+ " investavimo strategiją " +company+ " įmonei.")
     rule_dialog.destroy()
     if strategy=="LSTM Rekurentinis Neuroninis Tinklas":
-        _thread.start_new_thread(LSTM_predictor.calculate_LSTM, (company, ))
+        # _thread.start_new_thread(LSTM_predictor.calculate_LSTM, (company, ))
+        LSTM_predictor.calculate_LSTM(company)
     if strategy=="Fibonacci Retracement Lygiai":
-        _thread.start_new_thread(Fibonacci_retracement.calculate_and_get_dataframe, (company, ))
+        # _thread.start_new_thread(Fibonacci_retracement.calculate_and_get_dataframe, (company, ))
+        Fibonacci_retracement.calculate_and_get_dataframe(company)
 
 
 def open_new_rule_dialog():
@@ -197,16 +198,17 @@ def ask_directory():
 def test_and_predict(model, company):
     LSTM_predictor.test_model(model, company)
     prediction_for_tomorrow = LSTM_predictor.predictOneDay(model, company)
-    print(prediction_for_tomorrow)
+    print("My prediction for tomorrow: " + prediction_for_tomorrow)
     real_value_for_today = LSTM_predictor.getRealValue(company)
-    print(real_value_for_today)
+    print("Real value for today: " + real_value_for_today)
     trade_manager.execute_LSTM_strategy(company, float(real_value_for_today), float(prediction_for_tomorrow))
 
 def test_model():
     path = ask_directory()
     model = data_agent.load_saved_agent(path)
     company = get_selected_company()
-    _thread.start_new_thread(test_and_predict, (model, company, ))
+    # _thread.start_new_thread(test_and_predict, (model, company, ))
+    test_and_predict(model, company)
 
 selecttreeitembutton = Button(root, text="Parodyti uždarymo kainų grafiką", command=selectItem)
 selecttreeitembutton.grid(row=2, column=0, padx=10, pady=10)
