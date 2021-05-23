@@ -5,3 +5,5 @@ Kaip paleisti sistemą:
 3. Suinstaliuoti Python 3.8 versiją (nes tai naujausia kurią palaiko TensorFlow)
 4. Suinstaliuoti reikiamas bibliotekas, tokias kaip TensorFlow, numpy, pandas etc.
 5. Paleisti Portfolio_gui.py failą
+
+Demo video: https://youtu.be/JcyFTOSVIRQ
