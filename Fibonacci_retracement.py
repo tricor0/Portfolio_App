@@ -14,6 +14,7 @@ import numpy as np
 import pandas as pd
 import matplotlib.pyplot as plt
 import data_agent
+import trade_manager
 plt.style.use('fivethirtyeight')
 
 
@@ -29,7 +30,8 @@ plt.style.use('fivethirtyeight')
 
 def calculate_and_get_dataframe(company):
     dataframe = prepare_calculations(company)
-    get_dataframe_with_signals(dataframe)
+    dataframe_with_signals = get_dataframe_with_signals(dataframe)
+    trade_manager.execute_fibonacci_retracement(company, dataframe_with_signals)
     plot_with_signals(dataframe)
 
 def prepare_calculations(company):
@@ -179,7 +181,7 @@ def plot_with_signals(dataframe):
     #Plot the Fibonacci Levels along with the close price and with the Buy and Sell signals
     # new_df = df
     #plot the Fibonacci Levels
-    plt.figure(figsize=(20.33, 4.5))
+    plt.figure(figsize=(11,4))
     plt.plot(dataframe.index, dataframe['Close'], alpha=0.5)
     plt.scatter(dataframe.index, dataframe['Buy_Signal_Price'], color='green', marker='^', alpha=1)
     plt.scatter(dataframe.index, dataframe['Sell_Signal_Price'], color='red', marker='v', alpha=1)
@@ -191,5 +193,5 @@ def plot_with_signals(dataframe):
     plt.axhline(min_price, linestyle='--', alpha=0.5, color='purple')
     plt.ylabel('Close Price in USD')
     plt.xlabel('Date')
-    plt.xticks(rotation=45)
+    # plt.xticks(rotation=45)
     plt.show()

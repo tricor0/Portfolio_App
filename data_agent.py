@@ -17,7 +17,7 @@ def get_stock_data(company):
 def get_stock_data_Fib(company):
     #Get and show the data
     # df = pd.read_csv('GOOG.csv')
-    dataframe = web.DataReader(company, data_source='yahoo', start='2020-04-20', end='2021-05-14')
+    dataframe = web.DataReader(company, data_source='yahoo', start=start_date, end=end_date)
     #Set the date as the index
     # df = df.set_index(web.DatetimeIndex(df['Date'].values))
     dataframe['Date'] = dataframe.index
